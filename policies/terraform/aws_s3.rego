@@ -1,4 +1,4 @@
-package basics
+package policies.terraform.aws_s3
 
 deny[msg] if {
     r := input.resources[_]
@@ -16,7 +16,12 @@ deny[msg] if {
 
 
  # Test command : 
- # opa eval --input basics/bucket.json --data basics/s3.rego "data.basics.deny"
+
+ # opa eval --input examples/bucket.json \
+         # --data policies/terraform/aws_s3.rego \
+         # "data.policies.terraform.aws_s3.deny"
+
+
 
             # "s3 bucket my-bucket is not encrypted": true,
             # "s3 bucket my-bucket is public": true
