@@ -1,0 +1,6 @@
+{
+    "resource_type": "aws_s3_bucket",
+    "name": "my-bucket",
+    "acl": "public-read",
+    "encrypted": false
+}
