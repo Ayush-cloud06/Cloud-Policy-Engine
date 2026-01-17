@@ -1,0 +1,12 @@
+{
+    "buckets": [
+        {
+            "name": "logs-bucket",
+            "public": false
+        },
+        {
+            "name": "uploads-bucket",
+            "public": true
+        }
+    ]
+}
