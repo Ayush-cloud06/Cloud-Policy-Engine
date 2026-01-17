@@ -51,3 +51,44 @@ deny[msg] if {
         [r.address]
     )
 } 
+
+
+# Instance root volume must be encrypted
+
+deny[msg] if {
+    r := input.planned_values.root_module.resources[_]
+    r.type == "aws_instance"
+
+    # Iterate over root block devices
+    # (from resource_changes)
+    disk := r.values.root_block_devices[_]
+    not disk.encrypted
+
+    msg := sprintf(
+        "EC2 instance %s has an unecnrypted root volume",
+        [r.address]
+    )
+}
+
+# Instances must have  madatory tags of - Environment, Owner, CostCenter
+
+deny[msg] if {
+    r := input.planned_values.root_module.resources[_]
+    r.type == "aws_instance"
+
+    missing := missing_tags(r.values.tags)
+    count(missing) > 0
+
+    msg := sprintf(
+        "Ec2 instance %s is missing mandatory tags: %v",
+        [r.address, missing]
+    )
+}
+
+   # Helper function to find missing tags
+
+   missing_tags(tags) = missing if {
+    required := {"Environment", "Owner", "CostCenter"}
+    present := {k | tags[k]}
+    missing := required - present
+   }
