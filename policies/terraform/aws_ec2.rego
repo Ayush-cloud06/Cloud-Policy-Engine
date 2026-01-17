@@ -37,3 +37,17 @@ deny[msg] if {
     )
 }
 
+# Ec2 must enforce IMDSv2 (http_tokens = "required")
+
+deny[msg] if {
+    r := input.planned_values.root_module.resources[_]
+    r.type == "aws_instance"
+
+    #metadata_option missing or http_tokens not set to required
+    not r.values.metadata_options.http_tokens == "required"
+
+    msg := sprintf(
+        "EC2 instance %s does not enforce IMDSv2 (http_token must be 'required)",
+        [r.address]
+    )
+} 
